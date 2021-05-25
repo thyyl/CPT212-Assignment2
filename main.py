@@ -148,18 +148,6 @@ class Ui_MainWindow(object):
         self.label_6.setText(_translate("MainWindow",
                                         "<html><head/><body><p><span style=\" font-size:14pt;\">Remarks :</span></p></body></html>"))
 
-    def startPushed(self):
-        function = self.functionBox.currentText()
-
-        if function == 'Strong Connectivity':
-            self.strongConnectivity()
-        elif function == 'Cycle Detection':
-            # run cd function
-            print(function)
-        else:
-            # run shortest function
-            print(function)
-
     def resetPushed(self):
         self.canvas.draw_idle()
         self.canvas.plot(self.adList.getOriList())
@@ -174,27 +162,42 @@ class Ui_MainWindow(object):
         self.drawNetwork()
 
     def drawNetwork(self):
+        function = self.functionBox.currentText()
         self.canvas.draw_idle()
         graph = Graph()
-        newGraph = graph.randomGraph()
+        newGraph = graph.randomGraph(function)
         self.adList.updateList(newGraph)
         self.canvas.plot(self.adList.getNewList())
-        self.strongConnectivity()
+        self.startPushed()
 
-    def strongConnectivity(self):
+    def startPushed(self):
         graph = Graph()
+        function = self.functionBox.currentText()
 
         for origin in self.adList.getNewList():
             for destination in self.adList.getNewList()[origin]:
                 graph.addEdge(origin, destination)
 
-        if graph.isStrong() is True:
-            self.remarksLabel.setText('The graph is strongly connected.')
-            self.scCheckBox.setChecked(True)
-        else:
-            self.remarksLabel.setText('The graph is not strongly connected. '
+        if function == 'Strong Connectivity':
+           if graph.isStrong() is True:
+             test = 'Hello'
+             self.remarksLabel.setText(test + 'The graph is strongly connected.')
+             self.scCheckBox.setChecked(True)
+
+           else:
+             self.remarksLabel.setText('The graph is not strongly connected. '
                                       '\nA new adjusted graph that is strongly connected is shown.')
-            self.scCheckBox.setChecked(False)
+             self.scCheckBox.setChecked(False)
+
+        elif function == 'Cycle Detection':
+           if graph.isCyclic() is True:
+               self.remarksLabel.setText('The graph is cyclic.')
+               self.cCheckbox.setChecked(True)
+           else:
+               self.remarksLabel.setText('The graph is not cyclic. '
+                                         '\nA new adjusted graph that is cyclic is shown.')
+               self.cCheckbox.setChecked(False)
+
 
 if __name__ == "__main__":
     import sys
