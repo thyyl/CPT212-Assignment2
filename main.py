@@ -166,6 +166,11 @@ class Ui_MainWindow(object):
         function = self.functionBox.currentText()
         src = self.originBox.currentText()
         des = self.destinationBox.currentText()
+
+        if src == des:
+            self.remarksLabel.setText(f'Source and Destination are the same.')
+            return
+
         if function == 'Add New Edge':
             self.adList.addNewEdge(src, des)
             self.remarksLabel.setText(f'Edge {src} to {des} is added')

@@ -51,10 +51,18 @@ class AdjacencyList:
 
     def addNewEdge(self, origin, destination):
         adList = self.getNewList()
-        adList[origin].append(destination)
-        self.adjacencyList = adList
+
+        if (destination in adList[origin]) is False:
+            adList[origin].append(destination)
+            self.adjacencyList = adList
+        else:
+            print('Error')
 
     def removeEdge(self, origin, destination):
         adList = self.getNewList()
-        adList[origin].remove(destination)
-        self.adjacencyList = adList
+
+        if (destination in adList[origin]) is True:
+            adList[origin].remove(destination)
+            self.adjacencyList = adList
+        else:
+            print('Error')
