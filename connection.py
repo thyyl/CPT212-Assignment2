@@ -82,9 +82,43 @@ class Graph:
                         return True
         return False
 
+    def dijkstra(self, source, dest):
+        adjacencyList = AdjacencyList()
+
+        # Initialize the distance of all the nodes from the source node to infinity
+        distance = {'BER': 0, 'SEO': 0, 'LDN': 0, 'TKY': 0, 'NY': 0}
+        for i in distance:
+            distance[i] = 999999999999
+        # Distance of source node to itself is 0
+        distance[source] = 0
+
+        # Create a dictionary of { node, distance_from_source }
+        dict_node_length = {source: 0}
+        i = 0
+        while dict_node_length:
+
+            # Get the key for the smallest value in the dictionary
+            # i.e Get the node with the shortest distance from the source
+            current_source_node = min(dict_node_length, key=lambda k: dict_node_length[k])
+            del dict_node_length[current_source_node]
+
+            for node_dist in list(self.graph[current_source_node]):
+                adjnode = node_dist
+                length_to_adjnode = adjacencyList.getDistance(current_source_node,node_dist)
+
+                # Edge relaxation
+                if distance[adjnode] > distance[current_source_node] + length_to_adjnode:
+                    distance[adjnode] = distance[current_source_node] + length_to_adjnode
+                    dict_node_length[adjnode] = distance[adjnode]
+
+        if distance[dest] == 999999999999:
+            return False, 0
+        else:
+            distance = distance[dest]
+            return True, distance
+
     # only strongly connected
-    def randomGraph(self, function):
-        adList = AdjacencyList.getOriList()
+    def randomGraph(self, function, source, dest, adList):
         graph = Graph()
 
         for origin in adList:
@@ -108,6 +142,17 @@ class Graph:
 
                 if origin == destination or destination in graph.getEdge(origin):
                    continue
+
+                graph.addEdge(origin, destination)
+
+        elif function == 'Shortest Path':
+            counter, dist = graph.dijkstra(source, dest)
+            while counter is False:
+                origin = random.choice(list(adList))
+                destination = random.choice(list(adList))
+
+                if origin == destination or destination in graph.getEdge(origin):
+                    continue
 
                 graph.addEdge(origin, destination)
 

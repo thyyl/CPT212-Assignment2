@@ -48,3 +48,13 @@ class AdjacencyList:
 
     def getDistance(self, origin, destination):
         return self.distance[origin][destination]
+
+    def addNewEdge(self, origin, destination):
+        adList = self.getNewList()
+        adList[origin].append(destination)
+        self.adjacencyList = adList
+
+    def removeEdge(self, origin, destination):
+        adList = self.getNewList()
+        adList[origin].remove(destination)
+        self.adjacencyList = adList

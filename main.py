@@ -55,6 +55,8 @@ class Ui_MainWindow(object):
         self.functionBox.addItem("")
         self.functionBox.addItem("")
         self.functionBox.addItem("")
+        self.functionBox.addItem("")
+        self.functionBox.addItem("")
         self.label_5 = QtWidgets.QLabel(self.centralwidget)
         self.label_5.setGeometry(QtCore.QRect(730, 470, 211, 51))
         self.label_5.setObjectName("label_5")
@@ -117,7 +119,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow",
                                       "<html><head/><body><p><span style=\" font-size:26pt;\">Graphs Algorithm</span></p></body></html>"))
         self.label_2.setText(_translate("MainWindow",
-                                        "<html><head/><body><p><span style=\" font-size:14pt;\">Choose Vortex :</span></p></body></html>"))
+                                        "<html><head/><body><p><span style=\" font-size:14pt;\">Choose Vertex :</span></p></body></html>"))
         self.originBox.setItemText(0, _translate("MainWindow", "BER"))
         self.originBox.setItemText(1, _translate("MainWindow", "LDN"))
         self.originBox.setItemText(2, _translate("MainWindow", "NY"))
@@ -135,16 +137,18 @@ class Ui_MainWindow(object):
         self.functionBox.setItemText(0, _translate("MainWindow", "Strong Connectivity"))
         self.functionBox.setItemText(1, _translate("MainWindow", "Cycle Detection"))
         self.functionBox.setItemText(2, _translate("MainWindow", "Shortest Path"))
+        self.functionBox.setItemText(3, _translate("MainWindow", "Add New Edge"))
+        self.functionBox.setItemText(4, _translate("MainWindow", "Remove Edge"))
         self.label_5.setText(_translate("MainWindow",
                                         "<html><head/><body><p><span style=\" font-size:14pt;\">Graph Status : </span></p></body></html>"))
-        self.startButton.setText(_translate("MainWindow", "Start!"))
+        self.startButton.setText(_translate("MainWindow", "Check!"))
         self.scCheckBox.setText(_translate("MainWindow", "Strongly Connected"))
         self.cCheckbox.setText(_translate("MainWindow", "Cyclic"))
         self.spCheckbox.setText(_translate("MainWindow", "Shortest Path"))
         self.remarksLabel.setText(_translate("MainWindow",
                                              "<html><head/><body><p align=\"justify\"><span style=\" font-size:10pt;\">Comment</span></p></body></html>"))
         self.resetButton.setText(_translate("MainWindow", "Reset!"))
-        self.generateButton.setText(_translate("MainWindow", "Generate!"))
+        self.generateButton.setText(_translate("MainWindow", "Run Function!"))
         self.label_6.setText(_translate("MainWindow",
                                         "<html><head/><body><p><span style=\" font-size:14pt;\">Remarks :</span></p></body></html>"))
 
@@ -159,13 +163,26 @@ class Ui_MainWindow(object):
         self.spCheckbox.setChecked(False)
 
     def generatePushed(self):
+        function = self.functionBox.currentText()
+        src = self.originBox.currentText()
+        des = self.destinationBox.currentText()
+        if function == 'Add New Edge':
+            self.adList.addNewEdge(src, des)
+            self.remarksLabel.setText(f'Edge {src} to {des} is added')
+
+        elif function == 'Remove Edge':
+            self.adList.removeEdge(src, des)
+            self.remarksLabel.setText(f'Edge {src} to {des} is removed')
+
         self.drawNetwork()
+
+
 
     def drawNetwork(self):
         function = self.functionBox.currentText()
         self.canvas.draw_idle()
         graph = Graph()
-        newGraph = graph.randomGraph(function)
+        newGraph = graph.randomGraph(function, self.originBox.currentText(), self.destinationBox.currentText(), self.adList.getNewList())
         self.adList.updateList(newGraph)
         self.canvas.plot(self.adList.getNewList())
         self.startPushed()
@@ -178,25 +195,42 @@ class Ui_MainWindow(object):
             for destination in self.adList.getNewList()[origin]:
                 graph.addEdge(origin, destination)
 
+        self.scCheckBox.setChecked(False)
+        self.cCheckbox.setChecked(False)
+        self.spCheckbox.setChecked(False)
         if function == 'Strong Connectivity':
-           if graph.isStrong() is True:
-             test = 'Hello'
-             self.remarksLabel.setText(test + 'The graph is strongly connected.')
-             self.scCheckBox.setChecked(True)
+            if graph.isStrong() is True:
+                self.remarksLabel.setText('The graph is strongly connected.')
+                self.scCheckBox.setChecked(True)
 
-           else:
-             self.remarksLabel.setText('The graph is not strongly connected. '
-                                      '\nA new adjusted graph that is strongly connected is shown.')
-             self.scCheckBox.setChecked(False)
+            else:
+                self.remarksLabel.setText('The graph is not strongly connected. '
+                                          '\nA new adjusted graph that is strongly connected is shown.')
+                self.scCheckBox.setChecked(False)
 
         elif function == 'Cycle Detection':
-           if graph.isCyclic() is True:
-               self.remarksLabel.setText('The graph is cyclic.')
-               self.cCheckbox.setChecked(True)
-           else:
-               self.remarksLabel.setText('The graph is not cyclic. '
-                                         '\nA new adjusted graph that is cyclic is shown.')
-               self.cCheckbox.setChecked(False)
+            if graph.isCyclic() is True:
+                self.remarksLabel.setText('The graph is cyclic.')
+                self.cCheckbox.setChecked(True)
+            else:
+                self.remarksLabel.setText('The graph is not cyclic. '
+                                          '\nA new adjusted graph that is cyclic is shown.')
+                self.cCheckbox.setChecked(False)
+
+        elif function == 'Shortest Path':
+            src = self.originBox.currentText()
+            des = self.destinationBox.currentText()
+            counter, dist = graph.dijkstra(src, des)
+            if counter is True:
+                self.remarksLabel.setText(f'Shortest path from {src} to {des} is {dist}km')
+            else:
+                self.remarksLabel.setText(f'There is no path from {src} to {des}km')
+
+        elif function == 'Add New Edge':
+            self.remarksLabel.setText(f'Please select "Run Function!" to add new edge')
+
+        elif function == 'Remove Edge':
+            self.remarksLabel.setText(f'Please select "Run Function!" to remove edge')
 
 
 if __name__ == "__main__":
