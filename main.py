@@ -164,20 +164,22 @@ class Ui_MainWindow(object):
 
     def generatePushed(self):
         function = self.functionBox.currentText()
-        src = self.originBox.currentText()
-        des = self.destinationBox.currentText()
 
-        if src == des:
-            self.remarksLabel.setText(f'Source and Destination are the same.')
-            return
+        if function == 'Add New Edge' or function == 'Remove Edge':
+            src = self.originBox.currentText()
+            des = self.destinationBox.currentText()
 
-        if function == 'Add New Edge':
-            self.adList.addNewEdge(src, des)
-            self.remarksLabel.setText(f'Edge {src} to {des} is added')
+            if src == des:
+                self.remarksLabel.setText(f'Source and Destination are the same.')
+                return
 
-        elif function == 'Remove Edge':
-            self.adList.removeEdge(src, des)
-            self.remarksLabel.setText(f'Edge {src} to {des} is removed')
+            if function == 'Add New Edge':
+                self.adList.addNewEdge(src, des)
+                self.remarksLabel.setText(f'Edge {src} to {des} is added')
+
+            elif function == 'Remove Edge':
+                self.adList.removeEdge(src, des)
+                self.remarksLabel.setText(f'Edge {src} to {des} is removed')
 
         self.drawNetwork()
 
