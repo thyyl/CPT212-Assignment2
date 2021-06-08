@@ -155,5 +155,6 @@ class Graph:
                     continue
 
                 graph.addEdge(origin, destination)
+                counter, dist = graph.dijkstra(source, dest)
 
         return graph

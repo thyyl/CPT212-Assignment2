@@ -229,7 +229,7 @@ class Ui_MainWindow(object):
             if counter is True:
                 self.remarksLabel.setText(f'Shortest path from {src} to {des} is {dist}km')
             else:
-                self.remarksLabel.setText(f'There is no path from {src} to {des}km')
+                self.remarksLabel.setText(f'There is no path from {src} to {des}')
 
         elif function == 'Add New Edge':
             self.remarksLabel.setText(f'Please select "Run Function!" to add new edge')
