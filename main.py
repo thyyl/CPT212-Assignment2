@@ -214,7 +214,9 @@ class Ui_MainWindow(object):
             src = self.originBox.currentText()
             des = self.destinationBox.currentText()
             counter, dist = graph.dijkstra(src, des)
-            if counter is True:
+            if src == des:
+                self.remarksLabel.setText((f'Invalid source and destination vertices chose'))
+            elif counter is True:
                 self.remarksLabel.setText(f'Shortest path from {src} to {des} is {dist}km')
             else:
                 self.remarksLabel.setText(f'There is no path from {src} to {des}')
