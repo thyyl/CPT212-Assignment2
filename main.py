@@ -75,12 +75,6 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.cCheckbox.setFont(font)
         self.cCheckbox.setObjectName("cCheckbox")
-        self.spCheckbox = QtWidgets.QCheckBox(self.centralwidget)
-        self.spCheckbox.setGeometry(QtCore.QRect(730, 590, 211, 21))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.spCheckbox.setFont(font)
-        self.spCheckbox.setObjectName("spCheckbox")
         self.remarksLabel = QtWidgets.QLabel(self.centralwidget)
         self.remarksLabel.setGeometry(QtCore.QRect(730, 690, 451, 71))
         self.remarksLabel.setObjectName("remarksLabel")
@@ -144,7 +138,6 @@ class Ui_MainWindow(object):
         self.startButton.setText(_translate("MainWindow", "Check!"))
         self.scCheckBox.setText(_translate("MainWindow", "Strongly Connected"))
         self.cCheckbox.setText(_translate("MainWindow", "Cyclic"))
-        self.spCheckbox.setText(_translate("MainWindow", "Shortest Path"))
         self.remarksLabel.setText(_translate("MainWindow",
                                              "<html><head/><body><p align=\"justify\"><span style=\" font-size:10pt;\">Comment</span></p></body></html>"))
         self.resetButton.setText(_translate("MainWindow", "Reset!"))
@@ -160,7 +153,6 @@ class Ui_MainWindow(object):
 
         self.scCheckBox.setChecked(False)
         self.cCheckbox.setChecked(False)
-        self.spCheckbox.setChecked(False)
 
     def generatePushed(self):
         function = self.functionBox.currentText()
@@ -184,7 +176,6 @@ class Ui_MainWindow(object):
         self.drawNetwork()
 
 
-
     def drawNetwork(self):
         function = self.functionBox.currentText()
         self.canvas.draw_idle()
@@ -204,25 +195,20 @@ class Ui_MainWindow(object):
 
         self.scCheckBox.setChecked(False)
         self.cCheckbox.setChecked(False)
-        self.spCheckbox.setChecked(False)
+
         if function == 'Strong Connectivity':
             if graph.isStrong() is True:
                 self.remarksLabel.setText('The graph is strongly connected.')
-                self.scCheckBox.setChecked(True)
-
             else:
                 self.remarksLabel.setText('The graph is not strongly connected. '
                                           '\nA new adjusted graph that is strongly connected is shown.')
-                self.scCheckBox.setChecked(False)
 
         elif function == 'Cycle Detection':
             if graph.isCyclic() is True:
                 self.remarksLabel.setText('The graph is cyclic.')
-                self.cCheckbox.setChecked(True)
             else:
                 self.remarksLabel.setText('The graph is not cyclic. '
                                           '\nA new adjusted graph that is cyclic is shown.')
-                self.cCheckbox.setChecked(False)
 
         elif function == 'Shortest Path':
             src = self.originBox.currentText()
@@ -235,9 +221,21 @@ class Ui_MainWindow(object):
 
         elif function == 'Add New Edge':
             self.remarksLabel.setText(f'Please select "Run Function!" to add new edge')
+            return
 
         elif function == 'Remove Edge':
             self.remarksLabel.setText(f'Please select "Run Function!" to remove edge')
+            return
+
+        if graph.isStrong() is True:
+            self.scCheckBox.setChecked(True)
+        else:
+            self.scCheckBox.setChecked(False)
+
+        if graph.isCyclic() is True:
+            self.cCheckbox.setChecked(True)
+        else:
+            self.cCheckbox.setChecked(False)
 
 
 if __name__ == "__main__":
