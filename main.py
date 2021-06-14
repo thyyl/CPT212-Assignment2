@@ -183,7 +183,8 @@ class Ui_MainWindow(object):
         newGraph = graph.randomGraph(function, self.originBox.currentText(), self.destinationBox.currentText(), self.adList.getNewList())
         self.adList.updateList(newGraph)
         self.canvas.plot(self.adList.getNewList())
-        self.startPushed()
+        self.setRemark(newGraph)
+
 
     def startPushed(self):
         graph = Graph()
@@ -195,6 +196,18 @@ class Ui_MainWindow(object):
 
         self.scCheckBox.setChecked(False)
         self.cCheckbox.setChecked(False)
+        self.setRemark(graph)
+
+        if function == 'Add New Edge':
+            self.remarksLabel.setText(f'Please select "Run Function!" to add new edge')
+            return
+
+        elif function == 'Remove Edge':
+            self.remarksLabel.setText(f'Please select "Run Function!" to remove edge')
+            return
+
+    def setRemark(self, graph):
+        function = self.functionBox.currentText()
 
         if function == 'Strong Connectivity':
             if graph.isStrong() is True:
@@ -220,14 +233,6 @@ class Ui_MainWindow(object):
                 self.remarksLabel.setText(f'Shortest path from {src} to {des} is {dist}km')
             else:
                 self.remarksLabel.setText(f'There is no path from {src} to {des}')
-
-        elif function == 'Add New Edge':
-            self.remarksLabel.setText(f'Please select "Run Function!" to add new edge')
-            return
-
-        elif function == 'Remove Edge':
-            self.remarksLabel.setText(f'Please select "Run Function!" to remove edge')
-            return
 
         if graph.isStrong() is True:
             self.scCheckBox.setChecked(True)
